@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Airline Tickets</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+            color: #333;
+            padding: 50px;
+        }
+
+        h1 {
+            font-size: 3em;
+            color: #0077cc;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            background-color: #0077cc;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #0077cc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 1.2em;
+        }
+
+        button:hover {
+            background-color: #005fa3;
+        }
+
+        .info-box {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #0077cc;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 40px;
+        }
+
+        .ticket {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #0077cc;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 10px auto;
+            width: 50%;
+            text-align: left;
+        }
+
+        footer {
+            background-color: #0077cc;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 0 15px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar" id="navbar">
+        <a href="FlightFlip.html">Home</a>
+        <a href="login.html" id="loginLink">Login</a>
+        <a href="signup.html" id="signupLink">Sign Up</a>
+        <button id="signOutBtn" style="display:none;" onclick="signOut()">Sign Out</button>
+    </div>
+
+    <h1>View Airline Tickets</h1>
+
+    <div class="info-box">
+        <h2>Search Tickets Sold by Airlines</h2>
+
+        <!-- Search form for airline tickets -->
+        <form id="airlineTicketSearchForm" action="#" method="GET" onsubmit="searchAirlineTickets(event)">
+            <label for="from">From:</label>
+            <input type="text" id="from" name="from" placeholder="Enter departure city" required>
+
+            <label for="to">To:</label>
+            <input type="text" id="to" name="to" placeholder="Enter destination city" required>
+
+            <label for="date">Date of Travel:</label>
+            <input type="date" id="date" name="date" required>
+
+            <button type="submit">Search</button>
+        </form>
+
+        <div id="airline-search-results"></div>
+    </div>
+
+    <script>
+        function searchAirlineTickets(event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Retrieve search criteria from the form
+            const from = document.getElementById('from').value.toLowerCase();
+            const to = document.getElementById('to').value.toLowerCase();
+            const date = document.getElementById('date').value;
+
+            // Example tickets from airlines (this could be fetched from an API or database)
+            const airlineTickets = [
+                {
+                    from: "New York",
+                    to: "Los Angeles",
+                    date: "2025-03-10",
+                    price: "350",
+                    airline: "American Airlines"
+                },
+                {
+                    from: "Chicago",
+                    to: "San Francisco",
+                    date: "2025-03-12",
+                    price: "400",
+                    airline: "United Airlines"
+                }
+            ];
+
+            // Filter airline tickets based on search criteria
+            const filteredTickets = airlineTickets.filter(ticket => {
+                return ticket.from.toLowerCase().includes(from) &&
+                       ticket.to.toLowerCase().includes(to) &&
+                       ticket.date === date;
+            });
+
+            // Display search results
+            const resultsContainer = document.getElementById('airline-search-results');
+            if (filteredTickets.length > 0) {
+                resultsContainer.innerHTML = filteredTickets.map(ticket => `
+                    <div class="ticket">
+                        <h3>${ticket.from} to ${ticket.to} on ${ticket.date}</h3>
+                        <p><strong>Price:</strong> $${ticket.price}</p>
+                        <p><strong>Airline:</strong> ${ticket.airline}</p>
+                    </div>
+                `).join('');
+            } else {
+                resultsContainer.innerHTML = "<p>No airline tickets found matching your search criteria.</p>";
+            }
+        }
+    </script>
+
+    <footer>
+        <p>&copy; 2025 FlightFlip. All Rights Reserved.</p>
+        <p>
+            <a href="terms-and-conditions.html">Terms and Conditions</a> | 
+            <a href="about.html">About</a>
+        </p>
+    </footer>
+
+</body>
+</html>
+
+<script>
+    function updateUI() {
+        var isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+        if (isLoggedIn) {
+            // Hide login and sign-up links
+            document.getElementById('loginLink').style.display = 'none';
+            document.getElementById('signupLink').style.display = 'none';
+
+            // Show Sign Out button
+            document.getElementById('signOutBtn').style.display = 'inline-block';
+        } else {
+            // Show login and sign-up links
+            document.getElementById('loginLink').style.display = 'inline-block';
+            document.getElementById('signupLink').style.display = 'inline-block';
+
+            // Hide the Sign Out button
+            document.getElementById('signOutBtn').style.display = 'none';
+        }
+    }
+
+    function signOut() {
+        localStorage.setItem('isLoggedIn', 'false');
+        localStorage.removeItem('username'); 
+        window.location.href = 'login.html';
+    }
+
+    window.onload = function() {
+        updateUI();
+    };
+</script>
+
+<style>
+    /* General Button Styling */
+    button {
+        padding: 8px 15px; /* Adjust padding to match other buttons */
+        background-color: #0077cc;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em; /* Match other buttons */
+    }
+
+    button:hover {
+        background-color: #005fa3;
+    }
+
+    /* Sign Out Button (Smaller & More Professional) */
+    #signOutBtn {
+        padding: 8px 15px; /* Match other buttons */
+        font-size: 1em; /* Ensure consistent font size */
+        margin-left: 10px; /* Add space so it’s not crammed */
+    }
+</style>

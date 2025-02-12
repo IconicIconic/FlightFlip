@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Ticket</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f0f8ff; padding: 50px; }
+        .ticket-info { background-color: #fff; padding: 20px; border-radius: 8px; border: 2px solid #0077cc; width: 50%; margin: auto; }
+    </style>
+</head>
+<body>
+
+    <h1>Ticket Details</h1>
+    <div class="ticket-info" id="ticketDetails"></div>
+
+    <script>
+        const ticket = JSON.parse(localStorage.getItem("viewingTicket") || "{}");
+
+        if (Object.keys(ticket).length > 0) {
+            document.getElementById("ticketDetails").innerHTML = `
+                <h2>${ticket.from} to ${ticket.to} on ${ticket.date}</h2>
+                <p><strong>Price:</strong> $${ticket.price}</p>
+                <p><strong>Airline:</strong> ${ticket.airline}</p>
+                <p><strong>Seller:</strong> ${ticket.seller || "Unknown"}</p>
+                <p><strong>Description:</strong> ${ticket.description || "No description provided."}</p>
+            `;
+        } else {
+            document.getElementById("ticketDetails").innerHTML = "<p>No ticket details found.</p>";
+        }
+    </script>
+
+</body>
+</html>

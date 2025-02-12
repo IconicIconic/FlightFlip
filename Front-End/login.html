@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - FlightFlip</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+            color: #333;
+            padding: 50px;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #0077cc;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 1.2em;
+            margin: 10px;
+            width: 300px;
+            border-radius: 5px;
+            border: 1px solid #0077cc;
+        }
+        button {
+            background-color: #0077cc;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005fa3;
+        }
+        .back-btn {
+            background-color: #f0f8ff;
+            color: #0077cc;
+            border: 1px solid #0077cc;
+        }
+        .back-btn:hover {
+            background-color: #e6f7ff;
+        }
+
+        #errorMessage {
+            display: none;
+            color: red;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+
+        #successMessage {
+            display: none;
+            color: green;
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Login to Your FlightFlip Account</h1>
+    
+    <form id="loginForm">
+        <!-- Username Input -->
+        <input type="text" id="username" name="username" placeholder="Enter your username or email" required>
+        
+        <!-- Password Input -->
+        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+        
+        <!-- Submit Button -->
+        <button type="submit">Login</button>
+    </form>
+
+    <!-- Back Button -->
+    <button class="back-btn" onclick="window.history.back()">Back</button>
+
+    <!-- Error Message -->
+    <div id="errorMessage">
+        <p>Invalid username/email or password. Please try again.</p>
+    </div>
+
+    <!-- Success Message -->
+    <div id="successMessage">
+        <p>You have successfully logged in. Redirecting...</p>
+    </div>
+
+    <script>
+        // Handle form submission
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent form submission
+
+            // Get user input values and trim any extra spaces
+            var usernameOrEmail = document.getElementById('username').value.trim();
+            var password = document.getElementById('password').value.trim();
+
+            // Retrieve users from localStorage
+            var users = JSON.parse(localStorage.getItem('users')) || [];
+
+            // Find user with matching username or email and password
+            var user = users.find(user => 
+                (user.username === usernameOrEmail || user.email === usernameOrEmail) && user.password === password
+            );
+
+            if (user) {
+                // Store login state
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('username', user.username); // Store username
+                localStorage.setItem('email', user.email); // Store email
+
+                // Show success message
+                document.getElementById('successMessage').style.display = 'block';
+
+                // Hide error message if login is successful
+                document.getElementById('errorMessage').style.display = 'none';
+
+                // Redirect to homepage after 2 seconds
+                setTimeout(function() {
+                    window.location.href = 'FlightFlip.html'; // Redirect to the correct homepage
+                }, 2000); // 2 seconds delay
+            } else {
+                // Show error message if login fails
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('successMessage').style.display = 'none'; // Hide success message if login fails
+            }
+        });
+    </script>
+</body>
+</html>

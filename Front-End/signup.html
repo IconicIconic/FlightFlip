@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - FlightFlip</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+            color: #333;
+            padding: 50px;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #0077cc;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 1.2em;
+            margin: 10px;
+            width: 300px;
+            border-radius: 5px;
+            border: 1px solid #0077cc;
+        }
+        button {
+            background-color: #0077cc;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005fa3;
+        }
+        .back-btn {
+            background-color: #f0f8ff;
+            color: #0077cc;
+            border: 1px solid #0077cc;
+        }
+        .back-btn:hover {
+            background-color: #e6f7ff;
+        }
+
+        #successMessage {
+            display: none;
+            color: green;
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+
+        #errorMessage {
+            display: none;
+            color: red;
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Create Your FlightFlip Account</h1>
+    
+    <form id="signupForm">
+        <!-- Create Username Input -->
+        <input type="text" id="username" name="username" placeholder="Create a username" required>
+        
+        <!-- Email Input -->
+        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+        
+        <!-- Password Input -->
+        <input type="password" id="password" name="password" placeholder="Create a password" required>
+
+        <!-- Terms and Conditions -->
+        <div class="terms">
+            <input type="checkbox" id="termsCheckbox" required>
+            <label for="termsCheckbox">I agree to the 
+                <a href="terms-and-conditions.html" target="_blank">Terms and Conditions</a>
+            </label>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit">Sign Up</button>
+    </form>
+
+    <!-- Back Button -->
+    <button class="back-btn" onclick="window.history.back()">Back</button>
+
+    <!-- Success Message -->
+    <div id="successMessage">
+        <h2>Success!</h2>
+        <p>Your account has been created. Redirecting to the homepage...</p>
+    </div>
+
+    <!-- Error Message for Duplicate Email -->
+    <div id="errorMessage">
+        <p>Email is already in use. Please choose another one.</p>
+    </div>
+
+    <script>
+        // Handle form submission
+        document.getElementById('signupForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent form submission
+
+            // Check if the Terms and Conditions checkbox is checked
+            var termsChecked = document.getElementById('termsCheckbox').checked;
+
+            if (!termsChecked) {
+                alert('You must agree to the Terms and Conditions to sign up.');
+                return;
+            }
+
+            // Get user input values
+            var username = document.getElementById('username').value.trim();
+            var email = document.getElementById('email').value.trim();
+            var password = document.getElementById('password').value.trim();
+
+            // Retrieve users from localStorage
+            var users = JSON.parse(localStorage.getItem('users')) || [];
+
+            // Check if email is already used
+            var emailExists = users.some(user => user.email === email);
+
+            if (emailExists) {
+                // Show error if email already exists
+                document.getElementById('errorMessage').style.display = 'block';
+                return;
+            }
+
+            // Create new user object
+            var newUser = {
+                username: username,
+                email: email,
+                password: password
+            };
+
+            // Add new user to users array and store in localStorage
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+
+// After successful user creation and storing in localStorage
+localStorage.setItem('isLoggedIn', 'true');
+localStorage.setItem('username', username);
+
+// Show success message
+document.getElementById('successMessage').style.display = 'block';
+
+// Redirect to homepage after 2 seconds
+setTimeout(function() {
+    window.location.href = 'FlightFlip.html'; // Redirect to the correct homepage
+}, 2000); // 2 seconds delay
+
+        });
+    </script>
+</body>
+</html>

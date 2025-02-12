@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell Ticket - FlightFlip</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+            color: #333;
+            padding: 50px;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #0077cc;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 1.2em;
+            margin: 10px;
+            width: 300px;
+            border-radius: 5px;
+            border: 1px solid #0077cc;
+        }
+        button {
+            background-color: #0077cc;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005fa3;
+        }
+        .back-btn {
+            background-color: #f0f8ff;
+            color: #0077cc;
+            border: 1px solid #0077cc;
+        }
+        .back-btn:hover {
+            background-color: #e6f7ff;
+        }
+        .form-container {
+            margin-top: 30px;
+            background-color: #ffffff;
+            border: 2px solid #0077cc;
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Sell Your Ticket</h1>
+
+    <div class="form-container">
+        <form id="sellTicketForm">
+            <!-- Ticket Information Inputs -->
+            <input type="text" id="ticketNumber" name="ticketNumber" placeholder="Ticket Number" required><br>
+            <input type="text" id="flightNumber" name="flightNumber" placeholder="Flight Number" required><br>
+            <input type="text" id="fromCity" name="fromCity" placeholder="From (City)" required><br>
+            <input type="text" id="toCity" name="toCity" placeholder="To (City)" required><br>
+            <input type="date" id="departureDate" name="departureDate" required><br>
+            <input type="number" id="price" name="price" placeholder="Price (in USD)" required><br>
+
+            <button type="submit">Submit Ticket</button>
+        </form>
+    </div>
+
+    <!-- Back Button -->
+    <button class="back-btn" onclick="window.history.back()">Back</button>
+
+    <script>
+        // Handle form submission
+        document.getElementById('sellTicketForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent form submission
+
+            // Get ticket information
+            var ticketNumber = document.getElementById('ticketNumber').value;
+            var flightNumber = document.getElementById('flightNumber').value;
+            var fromCity = document.getElementById('fromCity').value;
+            var toCity = document.getElementById('toCity').value;
+            var departureDate = document.getElementById('departureDate').value;
+            var price = document.getElementById('price').value;
+
+            // Simple validation (you can enhance this with more logic)
+            if (ticketNumber && flightNumber && fromCity && toCity && departureDate && price) {
+                alert("Ticket details submitted successfully!");
+
+                // Redirect to homepage after submission
+                window.location.href = 'FlightFlip.html'; // Redirect to homepage after submission
+            } else {
+                alert('Please fill in all the fields.');
+            }
+        });
+    </script>
+</body>
+</html>

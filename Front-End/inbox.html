@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox - FlightFlip</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+            color: #333;
+            padding: 50px;
+        }
+
+        h1 {
+            font-size: 3em;
+            color: #0077cc;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            background-color: #0077cc;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #0077cc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+            font-size: 1.2em; /* Same font size for all buttons */
+        }
+
+        button:hover {
+            background-color: #005fa3;
+        }
+
+        .inbox {
+            margin-top: 40px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #0077cc;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .message {
+            padding: 10px;
+            border-bottom: 1px solid #0077cc;
+            margin: 10px 0;
+        }
+
+        .message:last-child {
+            border-bottom: none;
+        }
+
+        footer {
+            background-color: #0077cc;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 0 15px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar with dynamic login and sign out -->
+    <div class="navbar" id="navbar">
+        <a href="FlightFlip.html">Home</a> <!-- Home button now links to FlightFlip.html -->
+        <!-- Sign In / Sign Up / Sign Out Button -->
+        <button id="signInSignOutBtn" onclick="toggleSignInSignOut()">Sign In</button>
+        <button id="signUpBtn" onclick="window.location.href='signup.html'" style="display:none;">Sign Up</button>
+    </div>
+
+    <h1>Your Inbox</h1>
+    <div class="inbox" id="inboxMessages">
+        <!-- Messages will appear here -->
+    </div>
+
+    <footer>
+        <p>&copy; 2025 FlightFlip. All Rights Reserved.</p>
+        <p>
+            <a href="terms-and-conditions.html">Terms and Conditions</a> | 
+            <a href="about.html">About</a>
+        </p>
+    </footer>
+
+    <script>
+        // Function to load inbox messages from localStorage
+        function loadInboxMessages() {
+            const messages = JSON.parse(localStorage.getItem('messages')) || [];
+            const inboxElement = document.getElementById('inboxMessages');
+            
+            if (messages.length === 0) {
+                inboxElement.innerHTML = '<p>You have no new messages.</p>';
+            } else {
+                inboxElement.innerHTML = '';
+                messages.forEach(function(message, index) {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.classList.add('message');
+                    messageDiv.innerHTML = `
+                        <strong>${message.sender}</strong> says: <br>
+                        <p>${message.text}</p>
+                    `;
+                    inboxElement.appendChild(messageDiv);
+                });
+            }
+        }
+
+        // Function to toggle between Sign In and Sign Out buttons
+        function toggleSignInSignOut() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            if (isLoggedIn) {
+                // Sign out the user
+                localStorage.setItem('isLoggedIn', 'false');
+                window.location.href = 'login.html'; // Redirect to login page
+            } else {
+                window.location.href = 'login.html'; // Redirect to login page
+            }
+        }
+
+        // Function to update the Navbar based on login status
+        function updateNavbar() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const signInSignOutBtn = document.getElementById('signInSignOutBtn');
+            const signUpBtn = document.getElementById('signUpBtn');
+            
+            if (isLoggedIn) {
+                signInSignOutBtn.textContent = 'Sign Out'; // Change to "Sign Out"
+                signUpBtn.style.display = 'none'; // Hide Sign Up button if logged in
+            } else {
+                signInSignOutBtn.textContent = 'Sign In'; // Change to "Sign In"
+                signUpBtn.style.display = 'inline-block'; // Show Sign Up button if logged out
+            }
+        }
+
+        // Load inbox messages and update navbar on page load
+        window.onload = function() {
+            loadInboxMessages();
+            updateNavbar();
+        };
+    </script>
+</body>
+</html>
+
+<script>
+    function loadInboxMessages() {
+        const seller = localStorage.getItem("username"); // Get current logged-in seller
+        if (!seller) {
+            document.getElementById('inboxMessages').innerHTML = '<p>Please log in to view messages.</p>';
+            return;
+        }
+
+        const sellerInboxKey = `messages_${seller}`;
+        const messages = JSON.parse(localStorage.getItem(sellerInboxKey) || "[]");
+        const inboxElement = document.getElementById('inboxMessages');
+
+        if (messages.length === 0) {
+            inboxElement.innerHTML = '<p>You have no new messages.</p>';
+        } else {
+            inboxElement.innerHTML = messages.map(message => `
+                <div class="message">
+                    <strong>${message.sender}</strong> says:
+                    <p>${message.text}</p>
+                </div>
+            `).join('');
+        }
+    }
+
+    window.onload = function() {
+        loadInboxMessages();
+    };
+</script>

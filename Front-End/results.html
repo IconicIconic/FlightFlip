@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlightFlip - Search Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+            color: #333;
+            padding: 50px;
+        }
+        h1 {
+            font-size: 3em;
+            color: #0077cc;
+        }
+        .navbar {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            background-color: #0077cc;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .navbar a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+        .results-box {
+            margin-top: 50px;
+            width: 80%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #0077cc;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        footer {
+            background-color: #0077cc;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+        footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 0 15px;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar (optional) -->
+    <div class="navbar">
+        <a href="index.html">Home</a>
+        <a href="login.html">Login</a>
+        <a href="signup.html">Sign Up</a>
+    </div>
+
+    <h1>Search Results</h1>
+
+    <div class="results-box" id="resultsBox">
+        <!-- Results will be dynamically inserted here -->
+    </div>
+
+    <footer>
+        <p>&copy; 2025 FlightFlip. All Rights Reserved.</p>
+        <p><a href="terms-and-conditions.html">Terms and Conditions</a> | <a href="about.html">About</a></p>
+    </footer>
+
+    <script>
+        // Function to get search parameters from the URL
+        function getSearchParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return {
+                from: urlParams.get('from'),
+                to: urlParams.get('to'),
+                date: urlParams.get('date'),
+                minPrice: parseFloat(urlParams.get('minPrice')) || 0,
+                maxPrice: parseFloat(urlParams.get('maxPrice')) || Infinity,
+                duration: urlParams.get('duration'),
+                directFlight: urlParams.has('directFlight')
+            };
+        }
+
+        // Function to filter and display results based on search criteria
+        function displaySearchResults() {
+            const searchParams = getSearchParams();
+            const tickets = JSON.parse(localStorage.getItem('userTickets')) || [];
+            const results = tickets.filter(ticket => {
+                const matchesFrom = searchParams.from.toLowerCase() === ticket.from.toLowerCase();
+                const matchesTo = searchParams.to.toLowerCase() === ticket.to.toLowerCase();
+                const matchesDate = searchParams.date === ticket.date;
+                const matchesPrice = ticket.price >= searchParams.minPrice && ticket.price <= searchParams.maxPrice;
+
+                // For now, we only filter by from, to, date, and price
+                return matchesFrom && matchesTo && matchesDate && matchesPrice;
+            });
+
+            const resultsBox = document.getElementById('resultsBox');
+
+            if (results.length === 0) {
+                resultsBox.innerHTML = '<p>No tickets found matching your search criteria.</p>';
+            } else {
+                resultsBox.innerHTML = ''; // Clear previous results
+                results.forEach(ticket => {
+                    const ticketDiv = document.createElement('div');
+                    ticketDiv.style.padding = '15px';
+                    ticketDiv.style.marginBottom = '15px';
+                    ticketDiv.style.border = '1px solid #0077cc';
+                    ticketDiv.style.borderRadius = '8px';
+                    ticketDiv.style.backgroundColor = '#f0f8ff';
+
+                    ticketDiv.innerHTML = `
+                        <strong>${ticket.from} to ${ticket.to}</strong><br>
+                        Date: ${ticket.date}<br>
+                        Airline: ${ticket.airline}<br>
+                        Price: $${ticket.price}<br>
+                        Views: ${ticket.views} times
+                    `;
+
+                    resultsBox.appendChild(ticketDiv);
+                });
+            }
+        }
+
+        window.onload = function() {
+            displaySearchResults();
+        };
+    </script>
+</body>
+</html>

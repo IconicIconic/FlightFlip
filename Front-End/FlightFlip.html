@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlightFlip</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+            color: #333;
+            padding: 50px;
+        }
+        h1 {
+            font-size: 3em;
+            color: #0077cc;
+        }
+        .navbar {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            background-color: #0077cc;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .navbar a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #0077cc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005fa3;
+        }
+
+        .info-box {
+            background-color: #ffffff;
+            border: 2px solid #0077cc;
+            padding: 20px;
+            margin-top: 30px;
+            width: 80%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section {
+            margin-top: 30px;
+        }
+
+        /* Warning message style */
+        .warning {
+            display: none; /* Initially hidden */
+            color: white;
+            background-color: red;
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 5px;
+            font-size: 1.2em;
+        }
+
+        /* My Tickets Section */
+        #myTicketsSection {
+            margin-top: 40px;
+            display: none;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 8px;
+            margin: 5px;
+            background-color: #f0f8ff;
+            border-radius: 5px;
+            border: 1px solid #0077cc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .views {
+            font-size: 0.9em;
+            color: #555;
+            margin-left: 10px;
+        }
+
+        /* Footer Section */
+        footer {
+            background-color: #0077cc;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 0 15px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            float: right;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+.logo {
+    width: 150px;  /* Adjust width */
+    height: auto;  /* Maintain aspect ratio */
+}
+
+#signOutBtn {
+    padding: 14px 20px; /* Same padding as Inbox button */
+    background-color: #0077cc; /* Same blue background */
+    color: white; /* White text */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.0em; /* Same font size */
+    z-index: 100; /* Ensures it stays on top */
+}
+
+#signOutBtn:hover {
+    background-color: #005fa3; /* Darker blue on hover */
+}
+
+
+    </style>
+</head>
+<body>
+    <!-- Navbar with dynamic login, sign up, and sign out buttons -->
+    <div class="navbar" id="navbar">
+        <a href="login.html" id="loginLink">Login</a>
+        <a href="signup.html" id="signupLink">Sign Up</a>
+        
+        <!-- Sign Out Button (visible after login) -->
+        <button id="signOutBtn" style="display:none;" onclick="signOut()">Sign Out</button>
+    </div>
+
+    <!-- Image and welcome message -->
+    <img src="flightflip_logo_transparent.png" alt="FlightFlip Logo" class="logo">
+    <h1>Welcome to FlightFlip!</h1>
+
+    <div class="info-box">
+        <p>FlightFlip is your ultimate destination for all things travel! We help you find and sell unused airline tickets quickly and easily. Use the form below to find tickets for your next trip!</p>
+    </div>
+
+<!-- New Explore Tickets Section -->
+<div class="info-box">
+    <h2>Explore Tickets</h2>
+    <p>Choose from the following options to explore available tickets:</p>
+    <!-- Button for Tickets Sold by People -->
+    <button onclick="window.location.href='search-user-tickets.html'">Unused Tickets Sold by People (Cheaper option)</button>
+    <!-- Button for Tickets Sold by Airlines -->
+    <button onclick="window.location.href='view-airline-tickets.html'">Tickets Sold by Airlines</button>
+</div>
+
+
+
+<!-- Sell Tickets Section -->
+<div class="form-section">
+    <h2>Sell Your Unused Tickets</h2>
+    <p>If you have unused airline tickets, you can sell them here!</p>
+    <button id="sellTicketBtn" onclick="openModal()">Sell Ticket</button>
+</div>
+
+<!-- Warning Message (Initially Hidden) -->
+<div id="warningMessage" class="warning">
+    You need to log in or create an account to sell tickets!
+</div>
+
+<!-- Sell Ticket Modal -->
+<div id="ticketModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Sell Your Ticket</h2>
+        <form id="ticketForm">
+            <label for="from">From:</label>
+            <input type="text" id="from" name="from" placeholder="Enter departure city" required>
+
+            <label for="to">To:</label>
+            <input type="text" id="to" name="to" placeholder="Enter destination city" required>
+
+            <label for="date">Date of Travel:</label>
+            <input type="date" id="date" name="date" required>
+			
+			<label for="description">Ticket Description:</label>
+			<textarea id="description" name="description" placeholder="Enter details about the ticket (e.g., reason for selling, seat class, etc.)" required></textarea>
+
+
+            <!-- Airline field -->
+            <label for="airline">Airline:</label>
+            <input type="text" id="airline" name="airline" placeholder="Enter airline name" required>
+
+            <!-- Price field -->
+            <label for="price">Price ($):</label>
+            <input type="number" id="price" name="price" min="1" placeholder="Enter ticket price" required>
+
+            <!-- Terms and Conditions Checkbox -->
+            <label>
+                <input type="checkbox" id="readRules">
+                I have read the <a href="rules.html" target="_blank" onclick="openRulesPage()">Rules and Regulations</a> and understand them.
+            </label>
+
+            <!-- Submit Button -->
+            <button type="submit" id="submitTicketButton" disabled>Submit Ticket</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Function to handle opening the modal
+    function openModal() {
+        var isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'; // Check if user is logged in
+        if (isLoggedIn) {
+            document.getElementById('ticketModal').style.display = 'block';
+        } else {
+            document.getElementById('warningMessage').style.display = 'block';
+        }
+    }
+
+    // Function to close the modal
+    function closeModal() {
+        document.getElementById('ticketModal').style.display = 'none';
+    }
+
+    // Function to handle the "Rules and Regulations" page link click
+    function openRulesPage() {
+        // When clicking the "Rules and Regulations" link, you can just open the page
+        // The checkbox will remain unchecked when they come back to the modal
+    }
+
+    // Enable Submit button when checkbox is checked
+    const readRulesCheckbox = document.getElementById("readRules");
+    const submitTicketButton = document.getElementById("submitTicketButton");
+
+    readRulesCheckbox.addEventListener("change", function() {
+        if (readRulesCheckbox.checked) {
+            submitTicketButton.disabled = false;  // Enable Submit button
+        } else {
+            submitTicketButton.disabled = true;  // Disable Submit button
+        }
+    });
+
+    // Handle form submission
+    document.getElementById("ticketForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        if (readRulesCheckbox.checked) {
+            // Proceed with ticket submission logic
+            alert("Ticket submitted successfully!");
+            // You would send the form data to your backend here
+            closeModal(); // Close the modal after submission
+        } else {
+            alert("You must read and accept the rules before submitting.");
+        }
+    });
+</script>
+
+
+    <!-- My Tickets Section -->
+    <div class="info-box" id="myTicketsSection">
+        <h2>Your Tickets</h2>
+        <p>Here are the tickets you're currently selling:</p>
+        <ul id="ticketsList">
+            <!-- Dynamically filled list of tickets -->
+        </ul>
+    </div>
+
+    <script>
+        // Check login state on page load using localStorage
+        function updateUI() {
+            var isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'; // Retrieve login state from localStorage
+
+            if (isLoggedIn) {
+                // Hide login and sign-up links
+                document.getElementById('loginLink').style.display = 'none';
+                document.getElementById('signupLink').style.display = 'none';
+
+                // Show the Sell Ticket and Sign Out buttons
+                document.getElementById('sellTicketBtn').style.display = 'inline-block';
+                document.getElementById('signOutBtn').style.display = 'inline-block';
+
+                // Show "My Tickets" section
+                displayMyTickets();
+            } else {
+                // Keep login and sign-up links visible
+                document.getElementById('loginLink').style.display = 'inline';
+                document.getElementById('signupLink').style.display = 'inline';
+
+                // Hide the Sign Out button
+                document.getElementById('signOutBtn').style.display = 'none';
+
+                // Hide "My Tickets" section if not logged in
+                document.getElementById('myTicketsSection').style.display = 'none';
+            }
+
+            // Initially hide the warning message
+            document.getElementById('warningMessage').style.display = 'none';
+        }
+
+        // Function to handle the sign out process
+        function signOut() {
+            localStorage.setItem('isLoggedIn', 'false');
+            localStorage.removeItem('username');
+            updateUI();
+            window.location.href = 'login.html'; 
+        }
+
+        // Function to open the modal
+        function openModal() {
+            var isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            if (isLoggedIn) {
+                document.getElementById('ticketModal').style.display = 'block';
+            } else {
+                document.getElementById('warningMessage').style.display = 'block';
+            }
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            document.getElementById('ticketModal').style.display = 'none';
+        }
+
+        // Function to delete a ticket
+        function deleteTicket(index) {
+            var tickets = JSON.parse(localStorage.getItem('userTickets')) || [];
+            tickets.splice(index, 1); // Remove the ticket at the specified index
+            localStorage.setItem('userTickets', JSON.stringify(tickets));
+            displayMyTickets(); // Refresh the ticket list
+        }
+
+        // Function to display tickets
+        function displayMyTickets() {
+            var tickets = JSON.parse(localStorage.getItem('userTickets')) || [];
+            var ticketsList = document.getElementById('ticketsList');
+
+            if (tickets.length === 0) {
+                ticketsList.innerHTML = '<li>You currently have no tickets for sale.</li>';
+            } else {
+                ticketsList.innerHTML = ''; // Clear any existing tickets
+                tickets.forEach(function(ticket, index) {
+                    var li = document.createElement('li');
+                    li.textContent = `Ticket #${index + 1}: ${ticket.from} to ${ticket.to} on ${ticket.date}, Airline: ${ticket.airline}, Price: $${ticket.price}`;
+                    var viewCount = document.createElement('span');
+                    viewCount.classList.add('views');
+                    viewCount.textContent = `Viewed: ${ticket.views} times`;
+
+                    // Add a delete button
+                    var deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.onclick = function() {
+                        deleteTicket(index); // Delete the ticket when clicked
+                    };
+
+                    li.appendChild(viewCount);
+                    li.appendChild(deleteButton);
+                    ticketsList.appendChild(li);
+                });
+            }
+
+            document.getElementById('myTicketsSection').style.display = 'block';
+        }
+
+        // Handle ticket form submission
+        document.getElementById('ticketForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var from = document.getElementById('from').value;
+            var to = document.getElementById('to').value;
+            var date = document.getElementById('date').value;
+            var airline = document.getElementById('airline').value;
+            var price = document.getElementById('price').value;
+
+            var tickets = JSON.parse(localStorage.getItem('userTickets')) || [];
+
+            var newTicket = {
+                from: from,
+                to: to,
+                date: date,
+                airline: airline,  // Airline entered by user
+                price: price,      // Price of the ticket
+                views: 0
+            };
+
+            tickets.push(newTicket);
+            localStorage.setItem('userTickets', JSON.stringify(tickets));
+
+            closeModal();
+            displayMyTickets();
+            alert('Ticket submitted successfully!');
+        });
+
+        window.onload = function() {
+            updateUI();
+        };
+    </script>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2025 FlightFlip. All Rights Reserved.</p>
+        <p>
+            <a href="terms-and-conditions.html">Terms and Conditions</a> | 
+            <a href="about.html">About</a>
+        </p>
+    </footer>
+</body>
+</html>
+
+<style>
+    /* Inbox Button Styling */
+    #inboxBtn {
+        position: fixed; /* Fixes it to the screen */
+        top: 10px;
+        left: 10px;
+        padding: 12px 18px; /* Increased padding for a bigger button */
+        background-color: #0077cc;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.4em; /* Increased font size */
+        z-index: 1000; /* Ensures it stays on top */
+    }
+
+    #inboxBtn:hover {
+        background-color: #005fa3;
+    }
+</style>
+
+<!-- Move the Inbox button to the top-left corner -->
+<button id="inboxBtn">Inbox</button>
+
+<script>
+    document.getElementById("inboxBtn").addEventListener("click", function(event) {
+        let loggedInUser = localStorage.getItem("isLoggedIn") === "true"; // Check if logged in
+
+        if (!loggedInUser) {
+            alert("You need to be logged in to access your inbox.");
+            event.preventDefault(); // Stop any default action
+        } else {
+            window.location.href = "inbox.html"; // Redirect if logged in
+        }
+    });
+</script>
+
+
