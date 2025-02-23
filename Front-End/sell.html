@@ -75,26 +75,35 @@
     <button class="back-btn" onclick="window.history.back()">Back</button>
 
     <script>
-        // Handle form submission
-        document.getElementById('sellTicketForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Prevent form submission
+        document.getElementById("sellTicketForm").addEventListener("submit", async function (event) {
+            event.preventDefault(); // Prevent the page from reloading
 
-            // Get ticket information
-            var ticketNumber = document.getElementById('ticketNumber').value;
-            var flightNumber = document.getElementById('flightNumber').value;
-            var fromCity = document.getElementById('fromCity').value;
-            var toCity = document.getElementById('toCity').value;
-            var departureDate = document.getElementById('departureDate').value;
-            var price = document.getElementById('price').value;
+            // Get form values
+            const airline = document.getElementById("flightNumber").value;
+            const departure = document.getElementById("fromCity").value;
+            const arrival = document.getElementById("toCity").value;
+            const date = document.getElementById("departureDate").value;
+            const price = document.getElementById("price").value;
+            const sellerId = localStorage.getItem("userId") || "Unknown"; // Get seller's ID
 
-            // Simple validation (you can enhance this with more logic)
-            if (ticketNumber && flightNumber && fromCity && toCity && departureDate && price) {
-                alert("Ticket details submitted successfully!");
+            const ticketData = { airline, departure, arrival, date, price, sellerId };
 
-                // Redirect to homepage after submission
-                window.location.href = 'index.html'; // Redirect to homepage after submission
-            } else {
-                alert('Please fill in all the fields.');
+            try {
+                const response = await fetch("http://localhost:5000/api/tickets/add", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(ticketData)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert("Ticket added successfully!");
+                    window.location.href = "index.html"; // Redirect after submission
+                } else {
+                    alert("Error: " + result.error);
+                }
+            } catch (error) {
+                console.error("Failed to add ticket:", error);
             }
         });
     </script>
