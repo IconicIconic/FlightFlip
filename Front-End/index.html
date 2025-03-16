@@ -439,6 +439,32 @@
             <a href="about.html">About</a>
         </p>
     </footer>
+	
+	<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const user = localStorage.getItem("userId"); // Check if user is logged in
+        const loginBtn = document.getElementById("login-btn");
+        const signupBtn = document.getElementById("signup-btn");
+        const logoutBtn = document.getElementById("logout-btn");
+
+        if (user) {
+            loginBtn.style.display = "none";
+            signupBtn.style.display = "none";
+            logoutBtn.style.display = "inline-block";
+        } else {
+            loginBtn.style.display = "inline-block";
+            signupBtn.style.display = "inline-block";
+            logoutBtn.style.display = "none";
+        }
+
+        logoutBtn.addEventListener("click", function () {
+            localStorage.removeItem("userId");
+            alert("You have been signed out.");
+            window.location.reload();
+        });
+    });
+</script>
+	
 </body>
 </html>
 
